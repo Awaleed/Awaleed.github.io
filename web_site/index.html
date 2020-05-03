@@ -27,8 +27,13 @@
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
         navigator.serviceWorker.register('flutter_service_worker.js');
+        setTimeout(function(){
+          // This hides the address bar:
+          window.scrollTo(0, 1);
+        }, 0);
       });
     }
+    
   </script>
   <script src="main.dart.js" type="application/javascript"></script>
 </body>
