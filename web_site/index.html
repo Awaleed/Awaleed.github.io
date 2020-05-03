@@ -11,8 +11,6 @@
   <meta name="apple-mobile-web-app-title" content="ui_challenge_fokir">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
-  <meta name="mobile-web-app-capable" content="yes">
-
   <!-- Favicon -->
   <link rel="shortcut icon" type="image/png" href="favicon.png"/>
 
@@ -27,10 +25,6 @@
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
         navigator.serviceWorker.register('flutter_service_worker.js');
-        setTimeout(function(){
-          // This hides the address bar:
-          window.scrollTo(0, 1);
-        }, 0);
       });
     }
     
