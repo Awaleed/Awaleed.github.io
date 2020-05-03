@@ -1,6 +1,6 @@
 {
-    "name": "landing_page",
-    "short_name": "landing_page",
+    "name": "ui_challenge_fokir",
+    "short_name": "ui_challenge_fokir",
     "start_url": ".",
     "display": "minimal-ui",
     "background_color": "#0175C2",
