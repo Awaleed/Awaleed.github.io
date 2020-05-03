@@ -8,10 +8,10 @@ const RESOURCES = {
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
 "icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
-"index.html": "c9937b022019ef05381afec4989bb701",
-"/": "c9937b022019ef05381afec4989bb701",
+"index.html": "9593e3f83b08f331ca35692c733baaa4",
+"/": "9593e3f83b08f331ca35692c733baaa4",
 "main.dart.js": "1967e2bf73fa7d77d9e708a0f89bf666",
-"manifest.json": "a319b1e896cbf946f5fcb737ee5b5bc5"
+"manifest.json": "7015070b85389d1248cce3f4d805c6e5"
 };
 
 self.addEventListener('activate', function (event) {
