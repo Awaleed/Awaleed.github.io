@@ -1,6 +1,6 @@
 {
-    "name": "hci_lap_project",
-    "short_name": "hci_lap_project",
+    "name": "my_flutter_gallary",
+    "short_name": "my_flutter_gallary",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
