@@ -13,11 +13,15 @@ import Dialog from "@mui/material/Dialog";
 import PersonIcon from "@mui/icons-material/Person";
 import AddIcon from "@mui/icons-material/Add";
 import Typography from "@mui/material/Typography";
-import { blue } from "@mui/material/colors";
+import bg from "../../assets/images/bg.png";
+import location from "../../assets/icons/location.png";
 import { useAppDispatch, useAppSelector } from "@/hooks/store";
 import { setBranch } from "@/redux/slices/branch";
 import { BranchModel, useAllBranchesQuery } from "@/services/branch-api";
-import { Skeleton } from "@mui/material";
+import { Backdrop, Paper, Skeleton, Stack } from "@mui/material";
+import { secondaryShadow } from "@/theme/theme";
+import Image from "next/image";
+import zIndex from "@mui/material/styles/zIndex";
 
 export default function BranchDialog() {
   const currentBranch = useAppSelector((state) => state.branch.value);
@@ -43,30 +47,100 @@ export default function BranchDialog() {
   const { data = [], isLoading, isFetching, isError } = useAllBranchesQuery({});
 
   return (
-    <Dialog onClose={() => handleClose(null)} open={open}>
-      <DialogTitle>Set backup account</DialogTitle>
-      {isError && <div>An error has occurred!</div>}
-      {isLoading && <Skeleton />}
+    <Dialog
+      onClose={() => handleClose(null)}
+      open={open}
+      style={{
+        backdropFilter: "blur(25px)",
+      }}
+      PaperProps={{
+        sx: {
+          margin: 2,
+          p: 2,
+          width: "300px",
+          height: "500px",
+          borderRadius: "25px",
+          backgroundImage: bg,
+        },
+        style: {
+          position: "relative",
+          zIndex: 100,
+        },
+      }}
+    >
+      <DialogTitle>قم باختيار الفرع</DialogTitle>
+
+      {isError && <div>حدث خطا</div>}
+
+      {isLoading && <Skeleton height={150} width={300} />}
+      {isLoading && <Skeleton height={150} width={300} />}
+      {isLoading && <Skeleton height={150} width={300} />}
 
       {data && (
         <List sx={{ pt: 0 }}>
           {data.map((branch) => (
             <ListItem key={branch.id} disableGutters>
               <ListItemButton
+                sx={{
+                  border: 1,
+                  borderColor: "secondary.main",
+                  borderStyle: "solid",
+                  borderRadius: "999px",
+                  boxShadow: secondaryShadow,
+                  color: "secondary.main",
+                  backgroundColor: "white",
+                }}
                 onClick={() => handleListItemClick(branch)}
                 key={branch.id}
               >
-                <ListItemAvatar>
-                  <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
-                    <PersonIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary={branch.name_ar} />
+                <ListItemText
+                  primary={branch.name_ar}
+                  primaryTypographyProps={{
+                    textAlign: "center",
+                    fontWeight: "bold",
+                    fontSize: "1rem",
+                  }}
+                />
               </ListItemButton>
             </ListItem>
           ))}
         </List>
       )}
+
+      <Stack
+        style={{
+          overflow: "hidden",
+          position: "absolute",
+          zIndex: -100,
+          width: "100%",
+          height: "auto",
+          right: "0",
+          left: "0",
+          bottom: 0,
+          pointerEvents: "none",
+        }}
+      >
+        <Image
+          style={{
+            position: "absolute",
+            bottom: "20px",
+            width: "75px",
+            height: "auto",
+            placeSelf: "center",
+          }}
+          src={location}
+          alt=""
+        />
+        <Image
+          style={{
+            width: "150%",
+            height: "auto",
+            placeSelf: "center",
+          }}
+          src={bg}
+          alt=""
+        />
+      </Stack>
     </Dialog>
   );
 }

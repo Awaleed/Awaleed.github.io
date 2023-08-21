@@ -17,8 +17,12 @@ import AdbIcon from "@mui/icons-material/Adb";
 import { useAppDispatch } from "@/hooks/store";
 import { useAuth } from "@/hooks/useAuth";
 import { setCredentials } from "@/redux/slices/auth";
+import logo from "@/assets/icons/logo.svg";
+import Image from "next/image";
+import Logo from "./Logo";
+import { useAllCategoriesQuery } from "@/services/categories-api";
+import { showLoginDialog } from "@/redux/slices/showLogin";
 
-const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function AuthButton() {
@@ -26,41 +30,33 @@ function AuthButton() {
 
   const appDispatch = useAppDispatch();
 
-  const logout = () => {
-    appDispatch(
-      setCredentials({
-        token: null,
-        user: null,
-      })
-    );
-  };
+  const login = () => appDispatch(showLoginDialog());
+
+  const logout = () => appDispatch(setCredentials({ token: null, user: null }));
 
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) =>
     setAnchorElUser(event.currentTarget);
-  };
 
   const handleCloseUserMenu = (setting: string) => {
     setAnchorElUser(null);
-    if (setting === "Logout") {
-      logout();
-    }
+    if (setting === "Logout") logout();
   };
 
   if (userName === undefined || userName === null)
     return (
       <Button
         variant="contained"
-        href="/login"
+        onClick={login}
         sx={{
           my: 2,
           color: "white",
           display: "block",
         }}
       >
-        Login
+        تسجيل الدخول
       </Button>
     );
 
@@ -106,9 +102,19 @@ function Navbar() {
     setAnchorElNav(event.currentTarget);
   };
 
-  const handleCloseNavMenu = () => {
+  const handleCloseNavMenu = (url?: string | null) => {
+    if (url != null) {
+      var bodyRect = document.body.getBoundingClientRect(),
+        elemRect = document.querySelector(url)?.getBoundingClientRect(),
+        offset = (elemRect?.top ?? 0) - bodyRect.top;
+
+      window.scrollTo({ top: offset - 100, behavior: "smooth" });
+    }
+
     setAnchorElNav(null);
   };
+
+  const { data = [] } = useAllCategoriesQuery({});
 
   return (
     <AppBar
@@ -117,25 +123,8 @@ function Navbar() {
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            LOGO
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+          <Logo sx={{ display: { xs: "none", md: "flex" } }} />
+          <Box sx={{ flex: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -159,49 +148,48 @@ function Navbar() {
                 horizontal: "left",
               }}
               open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
+              onClose={() => handleCloseNavMenu()}
               sx={{
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+              {data.map((category) => (
+                <MenuItem
+                  key={category.id}
+                  onClick={() => handleCloseNavMenu(`#category_${category.id}`)}
+                >
+                  <Typography textAlign="center">{category.name_ar}</Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="/"
+          <Logo
+            image={false}
             sx={{
-              mr: 2,
-              display: { xs: "flex", md: "none" },
-              flexGrow: 1,
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
+              display: {
+                xs: "flex",
+                md: "none",
+                flex: 1,
+                justifyContent: "center",
+              },
             }}
-          >
-            LOGO
-          </Typography>
+          />
+          <Box sx={{ flex: 1, display: { xs: "flex", md: "none" } }} />
+
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
+            {data.map((category) => (
               <Button
-                key={page}
-                onClick={handleCloseNavMenu}
+                key={category.id}
+                onClick={() => handleCloseNavMenu(`#category_${category.id}`)}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
-                {page}
+                {category.name_ar}
               </Button>
             ))}
           </Box>
-          <AuthButton />
+          {/* <Box sx={{ display: { xs: "none", md: "flex" } }}> */}
+            <AuthButton />
+          {/* </Box> */}
         </Toolbar>
       </Container>
     </AppBar>

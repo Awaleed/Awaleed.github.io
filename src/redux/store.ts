@@ -6,10 +6,12 @@ import counterReducer, { CounterState } from "@/redux/slices/counter";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 import branchReducer, { BranchState } from "./slices/branch";
+import showLoginReducer from "./slices/showLogin";
 import { BrancApi } from "@/services/branch-api";
+import { CategoriesApi } from "@/services/categories-api";
 
 const persistConfig = {
-  key: "root",
+  key: "root2",
   storage,
 };
 
@@ -21,14 +23,17 @@ export const store = configureStore({
   reducer: {
     counter: persist<CounterState>(counterReducer),
     auth: persist<AuthState>(authReducer),
-    branch: persist<BranchState>(branchReducer),
+    branch: branchReducer,
+    showLogin: showLoginReducer,
     [AuthApi.reducerPath]: AuthApi.reducer,
     [BrancApi.reducerPath]: BrancApi.reducer,
+    [CategoriesApi.reducerPath]: CategoriesApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }).concat([
       AuthApi.middleware,
       BrancApi.middleware,
+      CategoriesApi.middleware,
     ]),
   devTools: true,
 });

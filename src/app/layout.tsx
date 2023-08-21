@@ -1,9 +1,11 @@
-// import "./globals.css";
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
 
-// import "@fontsource/roboto/300.css";
-// import "@fontsource/roboto/400.css";
-// import "@fontsource/roboto/500.css";
-// import "@fontsource/roboto/700.css";
+import "../app/globals.css";
+
+import "../css/embla.css";
 
 import type { Metadata } from "next";
 
@@ -13,7 +15,7 @@ import StoreProvider from "@/components/StoreProvider";
 import Navbar from "@/components/Navbar";
 import BottomAppBar from "@/components/BottomAppBar";
 import BranchDialog from "@/components/dialogs/BranchDialog";
-import { Box, Divider } from "@mui/material";
+import AuthDialog from "@/components/dialogs/AuthDialog";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -37,6 +39,7 @@ export default function RootLayout({
           </div>
           <BottomAppBar />
           <BranchDialog />
+          <AuthDialog />
         </StoreProvider>
       </body>
     </html>

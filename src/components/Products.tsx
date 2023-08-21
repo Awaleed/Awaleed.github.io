@@ -1,19 +1,16 @@
 "use client";
 
-import {
-  Card,
-  Button,
-  Grid,
-  Typography,
-
-} from "@mui/material";
+import { Card, Button, Grid, Typography, Skeleton } from "@mui/material";
 import { faker } from "@faker-js/faker";
 import { useAppDispatch, useAppSelector } from "@/hooks/store";
 import { setBranch } from "@/redux/slices/branch";
+import { useAllCategoriesQuery } from "@/services/categories-api";
+import { Product } from "@/models/category";
+import Image from "next/image";
 
-function ProductCard({ value }: { value: any }) {
+function ProductCard({ product }: { product: Product }) {
   return (
-    <Grid item xs={6} md={4} lg={2}>
+    <Grid item xs={6} sm={4} md={2.4}>
       <Card
         sx={{
           borderRadius: "16px",
@@ -25,18 +22,13 @@ function ProductCard({ value }: { value: any }) {
         }}
       >
         <img
-          src={faker.image.url()}
-          alt="random image"
-          style={{
-            aspectRatio: 1,
-            width: "100%",
-            objectFit: "fill",
-          }}
+          style={{ width: "100%", aspectRatio: "1", objectFit: "fill" }}
+          src={product.photo}
+          alt={product.photo}
         />
+
         <Typography variant="body1" padding={"10px"} flex={2}>
-          {faker.commerce.productName() +
-            " " +
-            (faker.datatype.boolean() ? "" : faker.commerce.productName())}
+          {product.name}
         </Typography>
         <Button
           variant="contained"
@@ -56,23 +48,31 @@ function ProductCard({ value }: { value: any }) {
 }
 
 export default function Products() {
-  const currentBranch = useAppSelector((state) => state.branch.value);
-  const appDispatch = useAppDispatch();
+  const {
+    data = [],
+    isLoading,
+    isFetching,
+    isError,
+  } = useAllCategoriesQuery({});
 
-  const products = Array.from({ length: 50 }, (_, i) => i + 1);
   return (
     <>
-      <Typography variant="h6">
-        CurrentBranch {currentBranch?.name_ar}
-      </Typography>
-      <Button variant="contained" onClick={() => appDispatch(setBranch(null))}>
-        ChangeBranch
-      </Button>
-      <Grid container spacing={2} alignItems="stretch">
-        {products.map((value) => (
-          <ProductCard key={value} value={value} />
-        ))}
-      </Grid>
+      {isError && <div>حدث خطا</div>}
+
+      {isLoading && <Skeleton height={150} width={300} />}
+      {isLoading && <Skeleton height={150} width={300} />}
+      {isLoading && <Skeleton height={150} width={300} />}
+
+      {data.map((value) => (
+        <div key={`category_${value.id}`} id={`category_${value.id}`}>
+          <Typography variant="h6">{value.name_ar}</Typography>
+          <Grid container spacing={2} alignItems="stretch">
+            {value.products.map((product) => (
+              <ProductCard key={`product_${product.id}`} product={product} />
+            ))}
+          </Grid>
+        </div>
+      ))}
     </>
   );
 }

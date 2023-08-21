@@ -3,6 +3,8 @@
 import { Provider } from "react-redux";
 import { persistor, store } from "../redux/store";
 import { PersistGate } from "redux-persist/integration/react";
+import { ThemeProvider } from "@mui/material";
+import { theme } from "@/theme/theme";
 
 export default function StoreProvider({
   children,
@@ -12,7 +14,7 @@ export default function StoreProvider({
   return (
     <Provider store={store}>
       <PersistGate loading={true} persistor={persistor}>
-        {children}
+        <ThemeProvider theme={theme}>{children}</ThemeProvider>
       </PersistGate>
     </Provider>
   );
