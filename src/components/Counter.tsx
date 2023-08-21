@@ -1,8 +1,8 @@
 "use client";
 
-import { decrement, increment } from "@/redux/features/counter/counterSlice";
+import { decrement, increment } from "@/redux/slices/counter";
 
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/hooks/store";
 import { RootState } from "@/redux/store";
 import { Button } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";

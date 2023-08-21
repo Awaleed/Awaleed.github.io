@@ -1,7 +1,14 @@
+import AdsCarousel from "@/components/AdsCarousel";
 import Counter from "@/components/Counter";
-import { Button } from "@mui/material";
-import Image from "next/image";
+import Products from "@/components/Products";
+import { Container } from "@mui/system";
 
 export default function Page() {
-  return <section></section>;
+  return (
+    <Container maxWidth="xl">
+      <AdsCarousel />
+      <Counter />
+      <Products />
+    </Container>
+  );
 }

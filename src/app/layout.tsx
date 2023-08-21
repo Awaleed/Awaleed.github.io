@@ -9,8 +9,11 @@ import type { Metadata } from "next";
 
 import { Inter } from "next/font/google";
 
-import { Providers } from "@/redux/provider";
+import StoreProvider from "@/components/StoreProvider";
 import Navbar from "@/components/Navbar";
+import BottomAppBar from "@/components/BottomAppBar";
+import BranchDialog from "@/components/dialogs/BranchDialog";
+import { Box, Divider } from "@mui/material";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,8 +30,14 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl">
       <body className={inter.className} style={{ margin: 0, padding: 0 }}>
-        <Navbar />
-        <Providers>{children}</Providers>
+        <StoreProvider>
+          <Navbar />
+          <div style={{ paddingTop: ".5rem", paddingBottom: ".5rem" }}>
+            {children}
+          </div>
+          <BottomAppBar />
+          <BranchDialog />
+        </StoreProvider>
       </body>
     </html>
   );
