@@ -6,7 +6,7 @@ import { Container } from "@mui/system";
 export default function Page() {
   return (
     <Container maxWidth="xl">
-      <AdsCarousel />
+      {/* <AdsCarousel /> */}
       <Counter />
       <Products />
     </Container>

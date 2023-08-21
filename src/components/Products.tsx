@@ -56,18 +56,18 @@ function ProductCard({ value }: { value: any }) {
 }
 
 export default function Products() {
-  // const currentBranch = useAppSelector((state) => state.branch.value);
-  // const appDispatch = useAppDispatch();
+  const currentBranch = useAppSelector((state) => state.branch.value);
+  const appDispatch = useAppDispatch();
 
   const products = Array.from({ length: 50 }, (_, i) => i + 1);
   return (
     <>
-      {/* <Typography variant="h6"> */}
-        {/* CurrentBranch {currentBranch?.name_ar} */}
-      {/* </Typography> */}
-      {/* <Button variant="contained" onClick={() => appDispatch(setBranch(null))}> */}
-        {/* ChangeBranch */}
-      {/* </Button> */}
+      <Typography variant="h6">
+        CurrentBranch {currentBranch?.name_ar}
+      </Typography>
+      <Button variant="contained" onClick={() => appDispatch(setBranch(null))}>
+        ChangeBranch
+      </Button>
       <Grid container spacing={2} alignItems="stretch">
         {products.map((value) => (
           <ProductCard key={value} value={value} />
