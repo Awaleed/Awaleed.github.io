@@ -31,12 +31,7 @@ export default function BranchDialog() {
 
   const handleClose = (value: BranchModel | null) => {
     if (value != null) {
-      console.table({
-        value: value,
-        currentBranch: currentBranch,
-        hasBranch: currentBranch != null,
-      });
-      appDispatch(setBranch(value));
+            appDispatch(setBranch(value));
     }
   };
 

@@ -1,12 +1,10 @@
 "use client";
 
 import { Card, Button, Grid, Typography, Skeleton } from "@mui/material";
-import { faker } from "@faker-js/faker";
 import { useAppDispatch, useAppSelector } from "@/hooks/store";
 import { setBranch } from "@/redux/slices/branch";
 import { useAllCategoriesQuery } from "@/services/categories-api";
 import { Product } from "@/models/category";
-import Image from "next/image";
 
 function ProductCard({ product }: { product: Product }) {
   return (
@@ -32,6 +30,7 @@ function ProductCard({ product }: { product: Product }) {
         </Typography>
         <Button
           variant="contained"
+          href={`/products/${product.id}`}
           sx={{
             margin: "10px",
             backgroundColor: "#aaa",
@@ -48,15 +47,21 @@ function ProductCard({ product }: { product: Product }) {
 }
 
 export default function Products() {
+  const appDispatch = useAppDispatch();
+  const branchId = useAppSelector((state) => state.branch?.value?.id);
+  
   const {
     data = [],
     isLoading,
     isFetching,
     isError,
-  } = useAllCategoriesQuery({});
+  } = useAllCategoriesQuery(branchId ?? 1);
 
   return (
     <>
+      <Button onClick={() => appDispatch(setBranch(null))}>
+        setBranch(null)
+      </Button>
       {isError && <div>حدث خطا</div>}
 
       {isLoading && <Skeleton height={150} width={300} />}

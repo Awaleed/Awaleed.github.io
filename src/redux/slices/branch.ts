@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 export interface BranchState {
-  value: any| null;
+  value: BranchModel | null;
 }
 
 const initialState: BranchState = {
@@ -14,7 +14,7 @@ export const branchSlice = createSlice({
   name: "branch",
   initialState,
   reducers: {
-    setBranch: (state, action: PayloadAction<any | null>) => {
+    setBranch: (state, action: PayloadAction<BranchModel | null>) => {
       state.value = action.payload;
     },
   },

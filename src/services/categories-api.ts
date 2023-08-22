@@ -1,13 +1,25 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseApiQuery } from "./base-api";
-import { Category, ConvertCategory } from "@/models/category";
+import { Category, ConvertCategory, Product } from "@/models/category";
 
-export const CategoriesApi = createApi({
-  reducerPath: "categoriesApi",
-  baseQuery: baseApiQuery("/1"),
+export const ProductsApi = createApi({
+  reducerPath: "ProductsApi",
+  baseQuery: baseApiQuery(),
   endpoints: (builder) => ({
-    allCategories: builder.query<Category[], any>({
-      query: () => ({ url: "/categories" }),
+    getProductByIdAndBranchId: builder.query<
+      Product,
+      { branchId: number; productId: number }
+    >({
+      query: ({ branchId, productId }) => ({
+        url: `products/${productId}`,
+        params: { branch_id: branchId },
+      }),
+      transformResponse: (response: Product) => {
+        return ConvertCategory.toProduct(JSON.stringify(response));
+      },
+    }),
+    allCategories: builder.query<Category[], number>({
+      query: (branchId) => ({ url: `/${branchId}/categories` }),
 
       transformResponse: (response: Category[]) => {
         return response.map((branch) => {
@@ -18,4 +30,5 @@ export const CategoriesApi = createApi({
   }),
 });
 
-export const { useAllCategoriesQuery } = CategoriesApi;
+export const { useAllCategoriesQuery, useGetProductByIdAndBranchIdQuery } =
+  ProductsApi;

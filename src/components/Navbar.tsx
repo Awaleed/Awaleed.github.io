@@ -14,7 +14,7 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-import { useAppDispatch } from "@/hooks/store";
+import { useAppDispatch, useAppSelector } from "@/hooks/store";
 import { useAuth } from "@/hooks/useAuth";
 import { setCredentials } from "@/redux/slices/auth";
 import logo from "@/assets/icons/logo.svg";
@@ -104,6 +104,7 @@ function Navbar() {
 
   const handleCloseNavMenu = (url?: string | null) => {
     if (url != null) {
+      // window.location.href = "/";
       var bodyRect = document.body.getBoundingClientRect(),
         elemRect = document.querySelector(url)?.getBoundingClientRect(),
         offset = (elemRect?.top ?? 0) - bodyRect.top;
@@ -114,7 +115,7 @@ function Navbar() {
     setAnchorElNav(null);
   };
 
-  const { data = [] } = useAllCategoriesQuery({});
+  const { data = [] } = useAllCategoriesQuery(useAppSelector((s) => s.branch.value?.id??0));
 
   return (
     <AppBar
@@ -188,7 +189,7 @@ function Navbar() {
             ))}
           </Box>
           {/* <Box sx={{ display: { xs: "none", md: "flex" } }}> */}
-            <AuthButton />
+          <AuthButton />
           {/* </Box> */}
         </Toolbar>
       </Container>

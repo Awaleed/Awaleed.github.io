@@ -31,7 +31,18 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ar" dir="rtl">
-      <body className={inter.className} style={{ margin: 0, padding: 0 }}>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body
+        className={inter.className}
+        style={{ margin: 0, padding: 0, direction: "rtl" }}
+      >
         <StoreProvider>
           <Navbar />
           <div style={{ paddingTop: ".5rem", paddingBottom: ".5rem" }}>
