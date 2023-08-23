@@ -4,7 +4,7 @@ import EmblaCarousel from "@/components/AdsCarousel/EmblaCarousel";
 import { useAppSelector } from "@/hooks/store";
 import { Product } from "@/models/category";
 import { useGetProductByIdAndBranchIdQuery } from "@/services/categories-api";
-import { Container, Skeleton, Stack } from "@mui/material";
+import { Container, Skeleton, Stack, Typography } from "@mui/material";
 import React from "react";
 import AddProductToCart from "./components/AddProductToCart";
 
@@ -48,9 +48,29 @@ function ProductDetils({ params }: { params: { id: number } }) {
             src={product.photo}
           />
         </div>
-        <div style={{ flex: 1 }}>
+        <Stack sx={{ flex: 1 }} gap={2}>
+          <Typography
+            typography={"body1"}
+            sx={{
+              textWrap: "initial",
+              color: "white",
+              backgroundColor: "secondary.main",
+              
+              fontWeight: "bold",
+              padding: "16.5px 32px",
+              border: "1px solid",
+              borderColor: "grey.400",
+              borderRadius: "999px",
+              textAlign: "center",
+              justifyContent: "center",
+              alignItems: "center",
+              display: "flex",
+            }}
+          >
+            {product.name}
+          </Typography>
           <AddProductToCart product={product} />
-        </div>
+        </Stack>
       </Stack>
     </Container>
   );

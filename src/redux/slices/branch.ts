@@ -1,4 +1,4 @@
-import { BranchModel } from "@/services/branch-api";
+import { BranchModel } from "@/services/data-api";
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 

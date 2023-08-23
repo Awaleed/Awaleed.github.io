@@ -17,7 +17,7 @@ import bg from "../../assets/images/bg.png";
 import location from "../../assets/icons/location.png";
 import { useAppDispatch, useAppSelector } from "@/hooks/store";
 import { setBranch } from "@/redux/slices/branch";
-import { BranchModel, useAllBranchesQuery } from "@/services/branch-api";
+import { BranchModel, useAllBranchesQuery } from "@/services/data-api";
 import { Backdrop, Paper, Skeleton, Stack } from "@mui/material";
 import { secondaryShadow } from "@/theme/theme";
 import Image from "next/image";

@@ -3,16 +3,23 @@ import { baseApiQuery } from "./base-api";
 
 export interface BranchModel {
   id: number;
-  name_ar: String;
-  nameen: String;
+  name_ar: string;
+  name_en: string;
   has_delivery: boolean;
   has_pickup_delivery: boolean;
   latitude: number;
   longitude: number;
 }
 
-export const BrancApi = createApi({
-  reducerPath: "branchApi",
+export interface ValueWithIdModel {
+  id: number;
+  name: string;
+  description?: string;
+  photo?: string;
+}
+
+export const DataApi = createApi({
+  reducerPath: "dataApi",
   baseQuery: baseApiQuery(),
   endpoints: (builder) => ({
     allBranches: builder.query<BranchModel[], any>({
@@ -28,7 +35,10 @@ export const BrancApi = createApi({
         });
       },
     }),
+    allSlicingMethod: builder.query<ValueWithIdModel[], any>({
+      query: () => ({ url: "slicing_method" }),
+    }),
   }),
 });
 
-export const { useAllBranchesQuery } = BrancApi;
+export const { useAllBranchesQuery, useAllSlicingMethodQuery } = DataApi;
