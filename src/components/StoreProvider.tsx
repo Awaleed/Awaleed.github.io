@@ -12,14 +12,15 @@ import rtlPlugin from "stylis-plugin-rtl";
 import { prefixer } from "stylis";
 import { CacheProvider } from "@emotion/react";
 
+import { SnackbarProvider } from "notistack";
+
 const cacheRtl = createCache({
   key: "muirtl",
   // prefixer is the only stylis plugin by default, so when
   // overriding the plugins you need to include it explicitly
   // if you want to retain the auto-prefixing behavior.
-  stylisPlugins: [prefixer, rtlPlugin]
+  stylisPlugins: [prefixer, rtlPlugin],
 });
-
 
 export default function StoreProvider({
   children,
@@ -29,8 +30,10 @@ export default function StoreProvider({
   return (
     <Provider store={store}>
       <PersistGate loading={false} persistor={persistor}>
-      <CacheProvider value={ cacheRtl }>
-                  <ThemeProvider theme={theme}>{children}</ThemeProvider>
+        <CacheProvider value={cacheRtl}>
+          <ThemeProvider theme={theme}>
+            <SnackbarProvider maxSnack={3}>{children}</SnackbarProvider>
+          </ThemeProvider>
         </CacheProvider>
       </PersistGate>
     </Provider>

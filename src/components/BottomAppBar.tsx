@@ -20,6 +20,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
 import MoreIcon from "@mui/icons-material/MoreVert";
+import CartButton from "./CartButton";
 
 const messages = [
   {
@@ -73,16 +74,14 @@ const messages = [
   },
 ];
 
-const StyledFab = styled(Fab)({
-  position: "absolute",
-  zIndex: 1,
-  top: -30,
-  left: 0,
-  right: 0,
-  margin: "0 auto",
-});
-
 export default function BottomAppBar() {
+  //  if current page is cart page, return null
+  if (window.location.pathname == "/cart") {
+    return null;
+  }
+
+  //  if current page is not cart page, return this:
+
   return (
     <AppBar
       position="sticky"
@@ -93,9 +92,19 @@ export default function BottomAppBar() {
         <IconButton color="inherit" aria-label="open drawer">
           <MenuIcon />
         </IconButton>
-        <StyledFab color="secondary" aria-label="add">
-          <AddIcon />
-        </StyledFab>
+        <Box
+          sx={{
+            position: "absolute",
+            zIndex: 1,
+            top: -30,
+            left: 0,
+            right: 0,
+            justifyContent: "center",
+            display: "flex",
+          }}
+        >
+          <CartButton />
+        </Box>
         <Box sx={{ flexGrow: 1 }} />
         <IconButton color="inherit">
           <SearchIcon />

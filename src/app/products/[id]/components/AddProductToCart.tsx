@@ -10,7 +10,7 @@ import {
   Button,
   Typography,
 } from "@mui/material";
-import { CartItem } from "@/redux/slices/cart";
+import { CartItem, addToCart, setCart } from "@/redux/slices/cart";
 import * as uuid from "uuid";
 import { primaryShadow, secondaryShadow } from "@/theme/theme";
 import { useAllSlicingMethodQuery } from "@/services/data-api";
@@ -20,15 +20,23 @@ import { useEffect, useState } from "react";
 import * as React from "react";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
+import { useAppDispatch, useAppSelector } from "@/hooks/store";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { SnackbarProvider, VariantType, useSnackbar } from "notistack";
 
-const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
-  props,
-  ref
-) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+const schema = yup
+  .object({
+    quantity: yup.number().positive().integer().required(),
+    productPriceId: yup.number().positive().integer().required(),
+    slicingMethodId: yup.number().positive().integer().required(),
+  })
+  .required();
 
 export default function AddProductToCart({ product }: { product: Product }) {
+  const appDispatch = useAppDispatch();
+  const { enqueueSnackbar } = useSnackbar();
+
   const {
     data: lSlicingMethods,
     isLoading,
@@ -37,77 +45,109 @@ export default function AddProductToCart({ product }: { product: Product }) {
   } = useAllSlicingMethodQuery({});
   const slicingMethods = lSlicingMethods || [];
 
-  const { register, handleSubmit, watch, getValues } = useForm<CartItem>({
-    defaultValues: {
-      product: product,
-      uuid: uuid.v4(),
-      quantity: 1,
-      productPrice: null,
-      slicingMethod: null,
-    },
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+    getValues,
+  } = useForm({
+    resolver: yupResolver(schema),
   });
+
   const [price, setPrice] = useState(0);
 
-  const productPrice = watch(["productPrice", "quantity"]);
+  const productPrice = watch(["productPriceId", "quantity"]);
   useEffect(() => {
     let values = getValues();
-    values = {
-      ...values,
-      productPrice: product.prices.find(
-        (price) => price.id == (values.productPrice as any)
-      ),
-      slicingMethod: slicingMethods.find(
-        (slicingMethod) => slicingMethod.id == (values.slicingMethod as any)
-      ),
-    };
+    const productPrice = product.prices.find(
+      (price) => price.id == values.productPriceId
+    );
 
-    if (values.productPrice && values.quantity) {
-      setPrice(values.productPrice.price * values.quantity);
+    if (productPrice && values.quantity) {
+      setPrice(productPrice.price * values.quantity);
     }
   }, [productPrice]);
 
-  const onSubmit: SubmitHandler<CartItem> = (data) => {
-    handleClick();
-    data = {
-      ...data,
-      productPrice: product.prices.find(
-        (price) => price.id == (data.productPrice as any)
-      ),
-      slicingMethod: slicingMethods.find(
-        (slicingMethod) => slicingMethod.id == (data.slicingMethod as any)
-      ),
-    };
-    console.log(data);
-  };
-  const [open, setOpen] = React.useState(false);
-
-  const handleClick = () => {
-    setOpen(true);
-  };
-
-  const handleClose = (
-    event?: React.SyntheticEvent | Event,
-    reason?: string
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpen(false);
-  };
   return (
     <>
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
-          تم اضافة المنتج الى السلة بنجاح! يمكنك الان الذهاب الى السلة
-        </Alert>
-      </Snackbar>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form
+        onSubmit={handleSubmit(
+          (data) => {
+            enqueueSnackbar("تم اضافة المنتج الى السلة بنجاح!", {
+              variant: "success",
+              anchorOrigin: { vertical: "top", horizontal: "center" },
+              autoHideDuration: 3000,
+
+              action: (key) => (
+                <>
+                  <Button
+                    href="/cart"
+                    type="submit"
+                    variant="text"
+                    sx={{
+                      border: 1,
+                      borderColor: "secondary.main",
+                      borderStyle: "solid",
+                      borderRadius: "999px",
+                      boxShadow: secondaryShadow,
+                      color: "white",
+                      backgroundColor: "secondary.main",
+                      ":hover": {
+                        boxShadow: primaryShadow,
+                        borderColor: "primary.main",
+                        backgroundColor: "primary.main",
+                      },
+                    }}
+                  >
+                    الذهاب الى السلة
+                  </Button>
+                </>
+              ),
+            });
+
+            const cartItem: CartItem = {
+              product: product,
+              uuid: uuid.v4(),
+              quantity: data.quantity,
+              productPrice: product.prices.find(
+                (price) => price.id == data.productPriceId
+              ),
+              slicingMethod: slicingMethods.find(
+                (slicingMethod) => slicingMethod.id == data.slicingMethodId
+              ),
+            };
+
+            appDispatch(addToCart(cartItem));
+          },
+          (data) => {
+            console.log(data.productPriceId);
+
+            if (!!errors.productPriceId) {
+              enqueueSnackbar("يجب اختيار حجم الذبيحة", {
+                variant: "error",
+                autoHideDuration: 3000,
+                anchorOrigin: { vertical: "top", horizontal: "center" },
+              });
+            } else if (!!errors.slicingMethodId) {
+              enqueueSnackbar("يجب اختيار طريقة التقطيع", {
+                variant: "error",
+                autoHideDuration: 3000,
+                anchorOrigin: { vertical: "top", horizontal: "center" },
+              });
+            }
+          }
+        )}
+      >
         <Stack gap={2}>
-          <FormControl fullWidth sx={{ flex: 2 }}>
+          <FormControl
+            fullWidth
+            sx={{ flex: 2 }}
+            error={!!errors.productPriceId}
+          >
             <InputLabel id="productPrice-label">حجم الذبيحة</InputLabel>
             <Select
-              {...register("productPrice")}
+              {...register("productPriceId")}
               label="حجم الذبيحة"
               labelId="productPrice-label"
               sx={{ borderRadius: "999px" }}
@@ -120,11 +160,13 @@ export default function AddProductToCart({ product }: { product: Product }) {
                     width="100%"
                   >
                     <span
-                      style={{
-                        flexGrow: 1,
-                        textWrap: "initial",
-                        marginInlineEnd: "10px",
-                      }}
+                      style={
+                        {
+                          flexGrow: 1,
+                          textWrap: "initial",
+                          marginInlineEnd: "10px",
+                        } as any
+                      }
                     >
                       {size.name}
                     </span>
@@ -135,10 +177,14 @@ export default function AddProductToCart({ product }: { product: Product }) {
             </Select>
           </FormControl>
 
-          <FormControl fullWidth sx={{ flex: 1 }}>
+          <FormControl
+            fullWidth
+            sx={{ flex: 1 }}
+            error={!!errors.slicingMethodId}
+          >
             <InputLabel id="slicingMethod-label">طريقة التقطيع</InputLabel>
             <Select
-              {...register("slicingMethod")}
+              {...register("slicingMethodId")}
               label="طريقة التقطيع"
               labelId="slicingMethod-label"
               sx={{ borderRadius: "999px" }}

@@ -8,7 +8,7 @@ export interface CartItem {
   productPrice?: Price | null;
   options?: { key: number; value: number[] }[]; // Map<int, List<int>> ,
   quantity?: number;
-  uuid?: string;
+  readonly uuid?: string;
 }
 
 export interface CartState {
@@ -16,7 +16,7 @@ export interface CartState {
   iteration?: number;
   paymentMethod?: any; // PaymentMethodModel?;
   coupon?: any; // CouponModel?;
-  note?: string;
+  note?: string | null;
   deliveryAddressType?: any; // DeliveryAddressType?;
 }
 
@@ -29,10 +29,27 @@ export const cartSlice = createSlice({
     setCart: (state, action: PayloadAction<CartState | null>) => {
       state = { ...state, ...action.payload };
     },
+    removeFromCart: (state, action: PayloadAction<string>) => {
+      state.cartItems = state.cartItems?.filter(
+        (item) => item.uuid !== action.payload
+      );
+    },
+    clearCart: (state) => {
+      state.cartItems = [];
+      state.iteration = 0;
+      state.paymentMethod = null;
+      state.coupon = null;
+      state.note = null;
+      state.deliveryAddressType = null;
+    },
+    addToCart: (state, action: PayloadAction<CartItem>) => {
+      state.cartItems = [...(state.cartItems ?? []), action.payload];
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setCart } = cartSlice.actions;
+export const { setCart, addToCart, clearCart, removeFromCart } =
+  cartSlice.actions;
 
 export default cartSlice.reducer;

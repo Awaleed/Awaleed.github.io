@@ -10,6 +10,7 @@ import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
+
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
@@ -22,6 +23,17 @@ import Image from "next/image";
 import Logo from "./Logo";
 import { useAllCategoriesQuery } from "@/services/categories-api";
 import { showLoginDialog } from "@/redux/slices/showLogin";
+import {
+  DialogTitle,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Popover,
+  Stack,
+} from "@mui/material";
+import { secondaryShadow } from "@/theme/theme";
+import CartButton from "./CartButton";
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
@@ -115,7 +127,9 @@ function Navbar() {
     setAnchorElNav(null);
   };
 
-  const { data = [] } = useAllCategoriesQuery(useAppSelector((s) => s.branch.value?.id??0));
+  const { data = [] } = useAllCategoriesQuery(
+    useAppSelector((s) => s.branch.value?.id ?? 0)
+  );
 
   return (
     <AppBar
@@ -188,9 +202,10 @@ function Navbar() {
               </Button>
             ))}
           </Box>
-          {/* <Box sx={{ display: { xs: "none", md: "flex" } }}> */}
-          <AuthButton />
-          {/* </Box> */}
+          <Box sx={{ display: { xs: "none", md: "flex" } }}>
+            <CartButton />
+            <AuthButton />
+          </Box>
         </Toolbar>
       </Container>
     </AppBar>

@@ -2,7 +2,7 @@ import { Reducer, configureStore } from "@reduxjs/toolkit";
 import { AuthApi } from "@/services/auth-api";
 import authReducer, { AuthState } from "@/redux/slices/auth";
 import counterReducer, { CounterState } from "@/redux/slices/counter";
-import cartReducer from "@/redux/slices/cart";
+import cartReducer, { CartState } from "@/redux/slices/cart";
 
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
@@ -12,7 +12,7 @@ import { DataApi } from "@/services/data-api";
 import { ProductsApi } from "@/services/categories-api";
 
 const persistConfig = {
-  key: "root2",
+  key: "root3",
   storage,
 };
 
@@ -25,8 +25,8 @@ export const store = configureStore({
     counter: persist<CounterState>(counterReducer),
     auth: persist<AuthState>(authReducer),
     branch: persist<BranchState>(branchReducer),
+    cart: persist<CartState>(cartReducer),
     showLogin: showLoginReducer,
-    cart: cartReducer,
     [AuthApi.reducerPath]: AuthApi.reducer,
     [DataApi.reducerPath]: DataApi.reducer,
     [ProductsApi.reducerPath]: ProductsApi.reducer,
